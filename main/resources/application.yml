@@ -1,0 +1,62 @@
+quarkus:
+  banner:
+    enabled: false
+  http:
+    access-log:
+      enabled: true
+      pattern: common
+  log:
+    level: INFO
+  native:
+    enable-https-url-handler: true
+    resources:
+      includes: locale-config.json
+  tls:
+    trust-all: true
+
+smallrye:
+  config:
+    mapping:
+      validate-unknown: false
+
+com:
+  e2x:
+    klarnact:
+      klarna:
+        client:
+          KlarnaPaymentService/mp-rest/url: ${klarna.base-url}
+          KlarnaCaptureService/mp-rest/url: ${klarna.base-url}
+          KlarnaRefundService/mp-rest/url: ${klarna.base-url}
+          KlarnaOrderService/mp-rest/url: ${klarna.base-url}
+klarna:
+  user-agent:
+    platform-name: commercetools
+    platform-version: 5.2.0
+    module-name: klarnact
+    module-version: 1.0.4
+  zone:
+    EU:
+      base-url: placeholder
+    NA:
+      base-url: placeholder
+    OC:
+      base-url: placeholder
+  zone-mapping:
+    AT: EU
+    AU: OC
+    BE: EU
+    CA: NA
+    CH: EU
+    DE: EU
+    DK: EU
+    ES: EU
+    FI: EU
+    GB: EU
+    IE: EU
+    IT: EU
+    NL: EU
+    "NO": EU
+    SE: EU
+    US: NA
+commercetools:
+  order-custom-type: orderKlarnaType

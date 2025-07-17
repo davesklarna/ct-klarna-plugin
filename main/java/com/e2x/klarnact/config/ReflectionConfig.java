@@ -1,0 +1,226 @@
+package com.e2x.klarnact.config;
+
+import com.commercetools.api.models.DomainResource;
+import com.commercetools.api.models.cart.*;
+import com.commercetools.api.models.cart_discount.*;
+import com.commercetools.api.models.category.Category;
+import com.commercetools.api.models.category.CategoryImpl;
+import com.commercetools.api.models.channel.Channel;
+import com.commercetools.api.models.channel.ChannelImpl;
+import com.commercetools.api.models.channel.ChannelReference;
+import com.commercetools.api.models.channel.ChannelReferenceImpl;
+import com.commercetools.api.models.common.*;
+import com.commercetools.api.models.custom_object.CustomObject;
+import com.commercetools.api.models.custom_object.CustomObjectImpl;
+import com.commercetools.api.models.custom_object.CustomObjectReference;
+import com.commercetools.api.models.custom_object.CustomObjectReferenceImpl;
+import com.commercetools.api.models.customer.Customer;
+import com.commercetools.api.models.customer.CustomerImpl;
+import com.commercetools.api.models.customer.CustomerReference;
+import com.commercetools.api.models.customer.CustomerReferenceImpl;
+import com.commercetools.api.models.customer_group.CustomerGroup;
+import com.commercetools.api.models.customer_group.CustomerGroupImpl;
+import com.commercetools.api.models.customer_group.CustomerGroupReference;
+import com.commercetools.api.models.customer_group.CustomerGroupReferenceImpl;
+import com.commercetools.api.models.discount_code.DiscountCode;
+import com.commercetools.api.models.discount_code.DiscountCodeImpl;
+import com.commercetools.api.models.discount_code.DiscountCodeReference;
+import com.commercetools.api.models.discount_code.DiscountCodeReferenceImpl;
+import com.commercetools.api.models.extension.Extension;
+import com.commercetools.api.models.extension.ExtensionImpl;
+import com.commercetools.api.models.inventory.InventoryEntry;
+import com.commercetools.api.models.inventory.InventoryEntryImpl;
+import com.commercetools.api.models.me.MyPayment;
+import com.commercetools.api.models.me.MyPaymentImpl;
+import com.commercetools.api.models.message.Message;
+import com.commercetools.api.models.message.MessageImpl;
+import com.commercetools.api.models.order.*;
+import com.commercetools.api.models.order_edit.OrderEdit;
+import com.commercetools.api.models.order_edit.OrderEditImpl;
+import com.commercetools.api.models.order_edit.OrderEditReference;
+import com.commercetools.api.models.order_edit.OrderEditReferenceImpl;
+import com.commercetools.api.models.payment.*;
+import com.commercetools.api.models.product.*;
+import com.commercetools.api.models.product_discount.ProductDiscount;
+import com.commercetools.api.models.product_discount.ProductDiscountImpl;
+import com.commercetools.api.models.product_discount.ProductDiscountReference;
+import com.commercetools.api.models.product_discount.ProductDiscountReferenceImpl;
+import com.commercetools.api.models.product_type.*;
+import com.commercetools.api.models.review.Review;
+import com.commercetools.api.models.review.ReviewImpl;
+import com.commercetools.api.models.review.ReviewReference;
+import com.commercetools.api.models.review.ReviewReferenceImpl;
+import com.commercetools.api.models.shipping_method.*;
+import com.commercetools.api.models.shopping_list.ShoppingList;
+import com.commercetools.api.models.shopping_list.ShoppingListImpl;
+import com.commercetools.api.models.shopping_list.ShoppingListReference;
+import com.commercetools.api.models.shopping_list.ShoppingListReferenceImpl;
+import com.commercetools.api.models.state.State;
+import com.commercetools.api.models.state.StateImpl;
+import com.commercetools.api.models.state.StateReference;
+import com.commercetools.api.models.state.StateReferenceImpl;
+import com.commercetools.api.models.store.*;
+import com.commercetools.api.models.subscription.Subscription;
+import com.commercetools.api.models.subscription.SubscriptionImpl;
+import com.commercetools.api.models.tax_category.*;
+import com.commercetools.api.models.type.*;
+import com.commercetools.api.models.zone.Zone;
+import com.commercetools.api.models.zone.ZoneImpl;
+import com.commercetools.api.models.zone.ZoneReference;
+import com.commercetools.api.models.zone.ZoneReferenceImpl;
+import com.commercetools.ml.models.common.CategoryReference;
+import com.commercetools.ml.models.common.CategoryReferenceImpl;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import io.vrap.rmf.base.client.AuthenticationToken;
+
+@RegisterForReflection(
+        targets = {
+                Address.class, AddressImpl.class,
+                Asset.class, AssetImpl.class,
+                AssetSource.class, AssetSourceImpl.class,
+                Attribute.class, AttributeImpl.class,
+                AttributeConstraintEnum.class, AttributeConstraintEnum.AttributeConstraintEnumEnum.class,
+                AttributeDefinition.class, AttributeDefinitionImpl.class,
+                AttributeLocalizedEnumValue.class, AttributeLocalizedEnumValueImpl.class,
+                AttributePlainEnumValue.class, AttributePlainEnumValueImpl.class,
+                AttributeType.class, AttributeTypeImpl.class,
+                AttributeBooleanTypeImpl.class, AttributeBooleanTypeImpl.class,
+                AttributeDateTimeTypeImpl.class, AttributeDateTimeTypeImpl.class,
+                AttributeDateTypeImpl.class, AttributeDateTypeImpl.class,
+                AttributeEnumTypeImpl.class, AttributeEnumTypeImpl.class,
+                AttributeLocalizableTextTypeImpl.class, AttributeLocalizableTextTypeImpl.class,
+                AttributeLocalizedEnumTypeImpl.class, AttributeLocalizedEnumTypeImpl.class,
+                AttributeMoneyTypeImpl.class, AttributeMoneyTypeImpl.class,
+                AttributeNestedTypeImpl.class, AttributeNestedTypeImpl.class,
+                AttributeNumberTypeImpl.class, AttributeNumberTypeImpl.class,
+                AttributeReferenceTypeImpl.class, AttributeReferenceTypeImpl.class,
+                AttributeSetTypeImpl.class, AttributeSetTypeImpl.class,
+                AttributeTextTypeImpl.class, AttributeTextTypeImpl.class,
+                AttributeTimeType.class, AttributeTimeTypeImpl.class,
+                AuthenticationToken.class,
+                Cart.class, CartImpl.class,
+                CartDiscount.class, CartDiscountImpl.class,
+                CartDiscountCustomLineItemsTarget.class, CartDiscountCustomLineItemsTargetImpl.class,
+                CartDiscountLineItemsTarget.class, CartDiscountLineItemsTargetImpl.class,
+                CartDiscountReference.class, CartDiscountReferenceImpl.class,
+                CartDiscountShippingCostTarget.class, CartDiscountShippingCostTargetImpl.class,
+                CartDiscountTarget.class, CartDiscountImpl.class,
+                CartDiscountValueAbsoluteDraft.class, CartDiscountValueAbsoluteDraftImpl.class,
+                CartDiscountValueDraft.class, CartDiscountValueDraftImpl.class,
+                CartDiscountValueFixedDraft.class, CartDiscountValueFixedDraftImpl.class,
+                CartDiscountValueGiftLineItemDraft.class, CartDiscountValueGiftLineItemDraftImpl.class,
+                CartDiscountValueRelativeDraft.class, CartDiscountValueRelativeDraftImpl.class,
+                CartReference.class, CartReferenceImpl.class,
+                CartOrigin.class, CartOrigin.CartOriginEnum.class,
+                CartPagedQueryResponse.class, CartPagedQueryResponseImpl.class,
+                CartState.class, CartState.CartStateEnum.class,
+                Category.class, CategoryImpl.class,
+                CategoryReference.class, CategoryReferenceImpl.class,
+                CentPrecisionMoney.class, CentPrecisionMoneyImpl.class,
+                Channel.class, ChannelImpl.class,
+                ChannelReference.class, ChannelReferenceImpl.class,
+                CreatedBy.class, CreatedByImpl.class,
+                Customer.class, CustomerImpl.class,
+                CustomerReference.class, CustomerReferenceImpl.class,
+                CustomerGroup.class, CustomerGroupImpl.class,
+                CustomerGroupReference.class, CustomerGroupReferenceImpl.class,
+                CustomFields.class, CustomFieldsImpl.class,
+                CustomLineItem.class, CustomLineItemImpl.class,
+                CustomObject.class, CustomObjectImpl.class,
+                CustomObjectReference.class, CustomObjectReferenceImpl.class,
+                DiscountCode.class, DiscountCodeImpl.class,
+                DiscountCodeInfo.class, DiscountCodeInfoImpl.class,
+                DiscountCodeReference.class, DiscountCodeReferenceImpl.class,
+                DiscountCodeState.class, DiscountCodeState.DiscountCodeStateEnum.class,
+                DiscountedLineItemPriceForQuantity.class, DiscountedLineItemPriceForQuantityImpl.class,
+                DiscountedLineItemPrice.class, DiscountedLineItemPriceImpl.class,
+                DiscountedLineItemPortion.class, DiscountedLineItemPortionImpl.class,
+                DiscountedPrice.class, DiscountedPriceImpl.class,
+                DomainResource.class,
+                Extension.class, ExtensionImpl.class,
+                FieldContainer.class, FieldContainerImpl.class,
+                Image.class, ImageImpl.class,
+                ImageDimensions.class, ImageDimensionsImpl.class,
+                InventoryEntry.class, InventoryEntryImpl.class,
+                InventoryMode.class, InventoryMode.InventoryModeEnum.class,
+                ItemState.class, ItemStateImpl.class,
+                ItemShippingDetails.class, ItemShippingDetailsImpl.class,
+                LastModifiedBy.class, LastModifiedByImpl.class,
+                LineItem.class, LineItemImpl.class,
+                LineItemMode.class, LineItemMode.LineItemModeEnum.class,
+                LineItemPriceMode.class, LineItemPriceMode.LineItemPriceModeEnum.class,
+                LocalizedString.class, LocalizedStringImpl.class,
+                Message.class, MessageImpl.class,
+                Money.class, MoneyImpl.class,
+                MyPayment.class, MyPaymentImpl.class,
+                MultiBuyCustomLineItemsTarget.class, MultiBuyCustomLineItemsTargetImpl.class,
+                MultiBuyLineItemsTarget.class, MultiBuyLineItemsTargetImpl.class,
+                Order.class, OrderImpl.class,
+                OrderEdit.class, OrderEditImpl.class,
+                OrderEditReference.class, OrderEditReferenceImpl.class,
+                OrderReference.class, OrderReferenceImpl.class,
+                OrderSetBillingAddressAction.class, OrderSetBillingAddressActionImpl.class,
+                OrderSetCustomFieldAction.class, OrderSetCustomFieldActionImpl.class,
+                OrderSetCustomTypeAction.class, OrderSetCustomTypeActionImpl.class,
+                Payment.class, PaymentImpl.class,
+                PaymentChangeTransactionInteractionIdAction.class, PaymentChangeTransactionInteractionIdActionImpl.class,
+                PaymentChangeTransactionStateAction.class, PaymentChangeTransactionStateActionImpl.class,
+                PaymentInfo.class, PaymentInfoImpl.class,
+                PaymentMethodInfo.class, PaymentMethodInfoImpl.class,
+                PaymentReference.class, PaymentReferenceImpl.class,
+                PaymentSetCustomFieldAction.class, PaymentSetCustomFieldActionImpl.class,
+                PaymentSetCustomTypeAction.class, PaymentSetCustomTypeActionImpl.class,
+                PaymentStatus.class, PaymentStatusImpl.class,
+                Price.class, PriceImpl.class,
+                Product.class, ProductImpl.class,
+                ProductDiscount.class, ProductDiscountImpl.class,
+                ProductDiscountReference.class, ProductDiscountReferenceImpl.class,
+                ProductProjection.class, ProductProjectionImpl.class,
+                ProductReference.class, ProductTypeReferenceImpl.class,
+                ProductType.class, ProductTypeImpl.class,
+                ProductTypeReference.class, ProductTypeReferenceImpl.class,
+                ProductVariant.class, ProductVariantImpl.class,
+                ProductVariantAvailability.class, ProductVariantAvailabilityImpl.class,
+                ProductVariantChannelAvailability.class, ProductVariantChannelAvailabilityImpl.class,
+                ProductVariantChannelAvailabilityMap.class, ProductVariantChannelAvailabilityMapImpl.class,
+                ReferenceTypeId.class, ReferenceTypeId.ReferenceTypeIdEnum.class,
+                ResourceTypeId.class, ResourceTypeId.ResourceTypeIdEnum.class,
+                Review.class, ReviewImpl.class,
+                ReviewReference.class, ReviewReferenceImpl.class,
+                RoundingMode.class, RoundingMode.RoundingModeEnum.class,
+                ScopedPrice.class, ScopedPriceImpl.class,
+                ShippingInfo.class, ShippingInfoImpl.class,
+                ShippingMethod.class, ShippingMethodImpl.class,
+                ShippingMethodReference.class, ShippingMethodReferenceImpl.class,
+                ShippingRate.class, ShippingRateImpl.class,
+                ShippingRateInput.class, ShippingRateInputImpl.class,
+                ShoppingList.class, ShoppingListImpl.class,
+                ShoppingListReference.class, ShoppingListReferenceImpl.class,
+                State.class, StateImpl.class,
+                StateReference.class, StateReferenceImpl.class,
+                Store.class, StoreImpl.class,
+                StoreKeyReference.class, StoreKeyReferenceImpl.class,
+                StoreReference.class, StoreKeyReferenceImpl.class,
+                Subscription.class, SubscriptionImpl.class,
+                SubRate.class, SubRateImpl.class,
+                TaxCalculationMode.class, TaxCalculationMode.TaxCalculationModeEnum.class,
+                TaxCategory.class, TaxCategoryImpl.class,
+                TaxCategoryReference.class, TaxCategoryReferenceImpl.class,
+                TaxedItemPrice.class, TaxedItemPriceImpl.class,
+                TaxedPrice.class, TaxedPriceImpl.class,
+                TaxMode.class, TaxMode.TaxModeEnum.class,
+                TaxPortion.class, TaxPortionImpl.class,
+                TaxRate.class, TaxRateImpl.class,
+                TextInputHint.class, TextInputHint.TextInputHintEnum.class,
+                Transaction.class, TransactionImpl.class,
+                TransactionType.class, TransactionType.TransactionTypeEnum.class,
+                Type.class, TypeImpl.class,
+                TypedMoney.class, TypedMoneyImpl.class,
+                TypeReference.class, TypeReferenceImpl.class,
+                TypeResourceIdentifier.class, TypeResourceIdentifierImpl.class,
+                Zone.class, ZoneImpl.class,
+                ZoneReference.class, ZoneReferenceImpl.class,
+        }
+)
+class ReflectionConfig {
+}

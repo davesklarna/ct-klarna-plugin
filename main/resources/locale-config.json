@@ -1,0 +1,12 @@
+{
+  "nonKlarnaPayment": {
+    "en": "Non-Klarna Payment EN",
+    "de": "Non-Klarna Payment DE",
+    "nl": "Non-Klarna Payment NL"
+  },
+  "shippingCharge": {
+    "en": "Shipping EN",
+    "de": "Shipping DE",
+    "nl": "Shipping NL"
+  }
+}
