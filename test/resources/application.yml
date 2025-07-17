@@ -1,0 +1,25 @@
+commercetools:
+  project-key: test-project-key
+  client-id: test-client-id
+  client-secret: test-client-secret
+  api-url: test-api-url
+  auth-url: test-auth-url
+  order-custom-type: test-custom-type
+
+klarna:
+  zone:
+    EU:
+      base-url: http://test-eu-base-url
+      auth:
+        username: test-eu-username
+        password: test-eu-password
+    NA:
+      base-url: http://test-nz-base-url
+      auth:
+        username: test-na-username
+        password: test-na-password
+    OC:
+      base-url: http://test-oc-base-url
+      auth:
+        username: test-oc-username
+        password: test-oc-password

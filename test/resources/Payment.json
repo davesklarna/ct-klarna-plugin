@@ -1,0 +1,56 @@
+{
+  "id": "386b495c-ed08-4da5-bb6a-14c0d73e7229",
+  "version": 6,
+  "lastMessageSequenceNumber": 3,
+  "createdAt": "2021-07-19T15:14:28.673Z",
+  "lastModifiedAt": "2021-07-19T15:25:44.328Z",
+  "lastModifiedBy": {
+    "clientId": "htI8hSViNXtMlbm0jE053zPI",
+    "isPlatformClient": false
+  },
+  "createdBy": {
+    "clientId": "0LhuentHxQuKCS5I_XQmFbrg",
+    "isPlatformClient": false,
+    "customer": {
+      "typeId": "customer",
+      "id": "59da62ac-a73b-4866-ae21-2b563268ae23"
+    }
+  },
+  "customer": {
+    "typeId": "customer",
+    "id": "59da62ac-a73b-4866-ae21-2b563268ae23"
+  },
+  "amountPlanned": {
+    "type": "centPrecision",
+    "currencyCode": "EUR",
+    "centAmount": 15800,
+    "fractionDigits": 2
+  },
+  "paymentMethodInfo": {
+    "paymentInterface": "Klarna"
+  },
+  "custom": {
+    "type": {
+      "typeId": "type",
+      "id": "7b2ad465-c788-42f5-977d-b7c7ca9b103f"
+    },
+    "fields": {
+      "orderId": "d384ceef-2b25-48ba-8d1b-ac1e5e11755b"
+    }
+  },
+  "paymentStatus": {},
+  "transactions": [
+    {
+      "id": "bdc94e04-92c1-4cce-9a94-23096189515b",
+      "type": "Charge",
+      "amount": {
+        "type": "centPrecision",
+        "currencyCode": "EUR",
+        "centAmount": 4000,
+        "fractionDigits": 2
+      },
+      "state": "Initial"
+    }
+  ],
+  "interfaceInteractions": []
+}
