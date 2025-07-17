@@ -1,0 +1,68 @@
+podTemplate(yaml: """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins-agent: daemonless
+spec:
+  containers:
+    - name: quarkus
+      image: quay.io/quarkus/centos-quarkus-maven:21.1.0-java11
+      command:
+        - cat
+      tty: true
+      securityContext:
+        runAsUser: 0
+"""
+) {
+  node(POD_LABEL) {
+    try {
+      stage("Checkout") {
+        checkout scm
+      }
+
+      stage("Test") {
+        container("quarkus") {
+          withCredentials([string(credentialsId: 'klarnact-github-access-token', variable: 'GITHUB_ACCESS_TOKEN')]) {
+            sh '''
+              GIT_COMMIT=`git rev-parse HEAD`
+              curl "https://api.github.com/repos/e2x/klarnact-plugin/statuses/$GIT_COMMIT" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
+                -X POST \
+                -d "{\\"state\\": \\"pending\\",\\"context\\": \\"continuous-integration/jenkins\\", \\"description\\": \\"Jenkins build started\\", \\"target_url\\": \\"https://jenkins.caas.e2x.com/job/$JOB_NAME/$BUILD_NUMBER\\"}"
+            '''
+            sh "gradle clean build test"
+            sh '''
+              GIT_COMMIT=`git rev-parse HEAD`
+              curl "https://api.github.com/repos/e2x/klarnact-plugin/statuses/$GIT_COMMIT" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
+                -X POST \
+                -d "{\\"state\\": \\"success\\",\\"context\\": \\"continuous-integration/jenkins\\", \\"description\\": \\"Jenkins build passed\\", \\"target_url\\": \\"https://jenkins.caas.e2x.com/job/$JOB_NAME/$BUILD_NUMBER\\"}"
+            '''
+          }
+        }
+      }
+    }
+    catch(e) {
+      currentBuild.result = "FAILURE"
+      container("quarkus") {
+        withCredentials([string(credentialsId: 'klarnact-github-access-token', variable: 'GITHUB_ACCESS_TOKEN')]) {
+          sh '''
+              GIT_COMMIT=`git rev-parse HEAD`
+              curl "https://api.github.com/repos/e2x/klarnact-plugin/statuses/$GIT_COMMIT" \
+                -H "Content-Type: application/json" \
+                -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
+                -X POST \
+                -d "{\\"state\\": \\"failure\\",\\"context\\": \\"continuous-integration/jenkins\\", \\"description\\": \\"Jenkins build failed\\", \\"target_url\\": \\"https://jenkins.caas.e2x.com/job/$JOB_NAME/$BUILD_NUMBER/testReport\\"}"
+          '''
+        }
+      }
+      throw e
+    }
+    finally {
+      junit "**/build/test-results/test/*.xml"
+    }
+  }
+}

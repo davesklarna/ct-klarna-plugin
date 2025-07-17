@@ -1,0 +1,107 @@
+podTemplate(yaml: """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins-agent: daemonless
+spec:
+  containers:
+    - name: quarkus
+      image: quay.io/quarkus/centos-quarkus-maven:21.1.0-java11
+      command:
+        - cat
+      tty: true
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 4.4Gi
+      securityContext:
+        runAsUser: 0
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:v1.6.0-debug
+      command:
+        - cat
+      tty: true
+    - name: gcloud
+      image: google/cloud-sdk:352.0.0
+      command:
+        - cat
+      tty: true
+"""
+) {
+  node(POD_LABEL) {
+    def appVersion = "none"
+    def commercetoolsProjectKey = "klarna-ct-dev"
+    def commercetoolsAuthUrl = "https://auth.europe-west1.gcp.commercetools.com/oauth/token"
+    def commercetoolsApiUrl = "https://api.europe-west1.gcp.commercetools.com"
+    def commercetoolsImageField = "imageUrl"
+    def klarnaEUBaseUrl = "https://api.playground.klarna.com/"
+    def klarnaNABaseUrl = "https://api-na.playground.klarna.com/"
+    def klarnaOCBaseUrl = "https://api-oc.playground.klarna.com/"
+
+    try {
+       stage("Checkout") {
+            ws("klarnact-plugin") {
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: "main"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'klarnact-plugin-github-ssh-key', url: 'ssh://git@github.com/e2x/klarnact-plugin']]]
+            }
+       }
+
+      stage("Build") {
+        container("quarkus") {
+            ws("klarnact-plugin") {
+                def buildProps = readProperties file: "gradle.properties"
+                appVersion = buildProps["applicationVersion"]
+                sh "gradle clean build -Dquarkus.package.type=native -Dquarkus.native.native-image-xmx=3500m"
+            }
+        }
+      }
+      stage("Package") {
+        container("kaniko") {
+            withCredentials([file(credentialsId: 'klarnact-gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                ws("klarnact-plugin") {
+                    sh "/kaniko/executor -f src/main/docker/Dockerfile.native-distroless -c \$(pwd) --single-snapshot --destination=eu.gcr.io/klarnact/klarna-ct-plugin:${appVersion}-SNAPSHOT"
+                }
+            }
+        }
+      }
+      stage("Deploy") {
+        container("gcloud") {
+            withCredentials([
+                file(credentialsId: 'klarnact-gcp-service-account', variable: 'GC_KEY'),
+                file(credentialsId: 'klarnact-plugin-secrets-dev', variable: 'DEV_SECRETS')]
+            ) {
+                ws("klarnact-plugin") {
+                    sh 'gcloud auth activate-service-account --key-file=${GC_KEY}'
+                    sh "gcloud secrets create klarna-ct-plugin-secrets-dev --replication-policy='automatic' --project klarnact || true"
+                    sh 'gcloud secrets versions add klarna-ct-plugin-secrets-dev --data-file=${DEV_SECRETS} --project klarnact'
+                    sh """gcloud beta run deploy klarna-ct-plugin-dev \
+                        --region europe-west1 \
+                        --image eu.gcr.io/klarnact/klarna-ct-plugin:${appVersion}-SNAPSHOT \
+                        --platform managed \
+                        --allow-unauthenticated \
+                        --project klarnact \
+                        --set-env-vars 'COMMERCETOOLS_PROJECT_KEY=${commercetoolsProjectKey}' \
+                        --set-env-vars "COMMERCETOOLS_AUTH_URL=${commercetoolsAuthUrl}" \
+                        --set-env-vars "COMMERCETOOLS_API_URL=${commercetoolsApiUrl}" \
+                        --set-env-vars "COMMERCETOOLS_MAPPING_CUSTOM_LINE_IMAGE_FIELD=${commercetoolsImageField}" \
+                        --set-env-vars "KLARNA_ZONE_EU_BASE_URL=${klarnaEUBaseUrl}" \
+                        --set-env-vars "KLARNA_ZONE_NA_BASE_URL=${klarnaNABaseUrl}" \
+                        --set-env-vars "KLARNA_ZONE_OC_BASE_URL=${klarnaOCBaseUrl}" \
+                        --set-secrets=/secrets/application.yaml=klarna-ct-plugin-secrets-dev:latest
+                    """
+                }
+            }
+        }
+      }
+    }
+    catch(e) {
+      currentBuild.result = "FAILURE"
+      throw e
+    }
+    finally {
+        ws("klarnact-plugin") {
+            junit "**/build/test-results/test/*.xml"
+        }
+    }
+  }
+}
